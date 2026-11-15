@@ -1,0 +1,13 @@
+docs {
+  # ff-cripto-api
+
+  Cotações do Bitcoin (CoinGecko, Binance, AwesomeAPI com fallback e histórico) e de moedas em real (USD, EUR, GBP via AwesomeAPI).
+
+  Pastas espelham o projeto:
+  - **Health**: `/healthz` (ping no banco).
+  - **Bitcoin**: serviços de `internal/service/interno` (fallback, cache, histórico). A subpasta **Por fonte** chama um fornecedor de `internal/service/externo/<fornecedor>` direto, sem fallback.
+  - **Moedas**: `CurrencyQuoteService` e `CurrencyHistoryService` (AwesomeAPI).
+
+  Ambientes: **Local** (`make run`, porta 8082) e **Producao** (Caddy em `/cripto`).
+  Erros seguem `{ "erro": { "codigo": "...", "mensagem": "..." } }`.
+}

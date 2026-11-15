@@ -1,0 +1,25 @@
+meta {
+  name: Binance
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/quotes/bitcoin/binance
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.usd: isNumber
+  res.body.brl: isNumber
+  res.body.fetched_at: isString
+  res.body.source: eq binance
+}
+
+docs {
+  Chama só este fornecedor (`internal/service/externo/binance`), sem fallback e sem gravar no banco. Cache em memória pelo TTL; se falhar, 503.
+
+  Sem chave. O USD vem do par BTCUSDT (Tether como aproximação do dólar).
+}

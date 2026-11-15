@@ -1,0 +1,33 @@
+meta {
+  name: Histórico BRL
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/quotes/bitcoin/history?currency=brl&days=30
+  body: none
+  auth: none
+}
+
+params:query {
+  currency: brl
+  days: 30
+}
+
+assert {
+  res.status: eq 200
+  res.body.source: eq coingecko
+  res.body.prices: isArray
+  res.body.stale: isBoolean
+  res.body.currency: eq brl
+  res.body.interval: eq hourly
+}
+
+docs {
+  CoinGecko `market_chart`, servido de `historico_bitcoin` e sincronizado a cada hora.
+
+  - `currency`: obrigatória, `usd` ou `brl`.
+  - `days`: 1 a 360 (padrão 30). Até 90 dias os pontos são de hora em hora (`interval: hourly`); acima, um por dia (`interval: daily`) mais o preço de agora.
+  - `market_cap` e `total_volume` podem vir `null`.
+}

@@ -1,0 +1,7 @@
+.git
+.env
+bin/
+deploy/
+*.md
+documentacao/
+.claude/

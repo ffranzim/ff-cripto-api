@@ -1,0 +1,15 @@
+# Quadlet (rootless): instalado em ~/.config/containers/systemd/ pelo make deploy.
+# e rode: systemctl --user daemon-reload && systemctl --user start ff-cripto
+[Unit]
+Description=ff-cripto-api (api.217-76-49-188.sslip.io/cripto)
+Wants=network-online.target
+After=network-online.target
+
+[Kube]
+Yaml=ff-cripto.yaml
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

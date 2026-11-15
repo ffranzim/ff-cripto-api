@@ -1,0 +1,64 @@
+# Pod do ff-cripto-api para Quadlet (.kube).
+# hostNetwork: a API escuta em 127.0.0.1:8082 e alcança o Postgres em 127.0.0.1:5432;
+# o Caddy publica em https://api.217-76-49-188.sslip.io/cripto.
+# Tabelas no schema ff_cripto do banco "fundos" (DB_SCHEMA).
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ff-cripto
+  labels:
+    app: ff-cripto
+spec:
+  hostNetwork: true
+  restartPolicy: Always
+
+  # Roda "api migrate" antes de subir a API (idempotente: só aplica o que falta).
+  initContainers:
+    - name: migrate
+      image: localhost/ff-cripto:latest
+      args: ["migrate"]
+      env:
+        - name: DB_SCHEMA
+          value: "ff_cripto"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: ff-cripto
+              key: DATABASE_URL
+
+  containers:
+    - name: api
+      image: localhost/ff-cripto:latest
+      env:
+        - name: HOST
+          value: "127.0.0.1"
+        - name: PORT
+          value: "8082"
+        - name: DB_SCHEMA
+          value: "ff_cripto"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: ff-cripto
+              key: DATABASE_URL
+        # Chave Demo da CoinGecko (cotação e histórico do Bitcoin).
+        - name: COINGECKO_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ff-cripto
+              key: COINGECKO_API_KEY
+        # Chave gratuita da AwesomeAPI (sem ela, 429 no IP da VPS). Opcional.
+        - name: AWESOMEAPI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ff-cripto
+              key: AWESOMEAPI_API_KEY
+              optional: true
+      resources:
+        limits:
+          memory: 128Mi
+      securityContext:
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]

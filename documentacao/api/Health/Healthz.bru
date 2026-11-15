@@ -1,0 +1,20 @@
+meta {
+  name: Healthz
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/healthz
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq ok
+}
+
+docs {
+  Pinga o banco (timeout 2s). 503 `banco_indisponivel` se o Postgres não responder.
+}

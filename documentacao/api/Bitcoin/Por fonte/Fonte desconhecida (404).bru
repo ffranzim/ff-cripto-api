@@ -1,0 +1,21 @@
+meta {
+  name: Fonte desconhecida (404)
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/quotes/bitcoin/kraken
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+  res.body.erro.codigo: isString
+  res.body.erro.mensagem: isString
+}
+
+docs {
+  Fonte fora de `coingecko | binance | awesomeapi`: 404.
+}

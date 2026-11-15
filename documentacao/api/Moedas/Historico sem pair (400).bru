@@ -1,0 +1,25 @@
+meta {
+  name: Histórico sem pair (400)
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/quotes/currencies/history?days=30
+  body: none
+  auth: none
+}
+
+params:query {
+  days: 30
+}
+
+assert {
+  res.status: eq 400
+  res.body.erro.mensagem: isString
+  res.body.erro.codigo: eq entrada_invalida
+}
+
+docs {
+  `pair` é obrigatório: 400 `entrada_invalida`.
+}

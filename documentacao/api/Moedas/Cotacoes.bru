@@ -1,0 +1,28 @@
+meta {
+  name: Cotações
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/quotes/currencies
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.source: eq awesomeapi
+  res.body.dados: isArray
+  res.body.dados[0].code: eq USD
+  res.body.dados[1].code: eq EUR
+  res.body.dados[2].code: eq GBP
+  res.body.stale: isBoolean
+}
+
+docs {
+  USD, EUR e GBP em BRL (AwesomeAPI), nessa ordem.
+
+  - Cache em memória pelo TTL `BTC_QUOTE_TTL_SECONDS`.
+  - Se a busca falhar, devolve as últimas boas com `stale: true`; sem nenhuma, 503.
+}

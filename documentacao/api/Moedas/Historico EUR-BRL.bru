@@ -1,0 +1,32 @@
+meta {
+  name: Histórico EUR-BRL
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/quotes/currencies/history?pair=EUR-BRL&days=30
+  body: none
+  auth: none
+}
+
+params:query {
+  pair: EUR-BRL
+  days: 30
+}
+
+assert {
+  res.status: eq 200
+  res.body.pair: eq EUR-BRL
+  res.body.source: eq awesomeapi
+  res.body.dados: isArray
+  res.body.stale: isBoolean
+}
+
+docs {
+  Fechamento diário (AwesomeAPI `json/daily`) em ordem cronológica; o último ponto é a cotação de agora.
+
+  - `pair`: obrigatório, `USD-BRL | EUR-BRL | GBP-BRL`.
+  - `days`: últimas N cotações (dias úteis), 1 a 30 (padrão 30).
+  - Cache em memória de 1 hora por par.
+}

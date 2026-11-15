@@ -1,0 +1,25 @@
+meta {
+  name: Histórico sem currency (400)
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/quotes/bitcoin/history?days=7
+  body: none
+  auth: none
+}
+
+params:query {
+  days: 7
+}
+
+assert {
+  res.status: eq 400
+  res.body.erro.mensagem: isString
+  res.body.erro.codigo: eq entrada_invalida
+}
+
+docs {
+  `currency` é obrigatória: 400 `entrada_invalida`.
+}

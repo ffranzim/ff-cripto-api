@@ -1,0 +1,31 @@
+meta {
+  name: Histórico 360 dias
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/quotes/bitcoin/history?currency=brl&days=360
+  body: none
+  auth: none
+}
+
+params:query {
+  currency: brl
+  days: 360
+}
+
+assert {
+  res.status: eq 200
+  res.body.source: eq coingecko
+  res.body.days: eq 360
+  res.body.interval: eq daily
+  res.body.prices: isArray
+}
+
+docs {
+  Acima de 90 dias o histórico vem com um ponto por dia (o primeiro de cada dia em UTC) e termina no preço mais recente.
+
+  - Máximo: 360 dias (a API pública/demo da CoinGecko vai até 365).
+  - `days` acima de 360 dá `400 entrada_invalida`.
+}

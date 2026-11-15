@@ -1,0 +1,12 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    schema: "db/migrations"   # sqlc entende o formato do goose e ignora os blocos Down
+    queries: "db/queries"
+    gen:
+      go:
+        package: "sqlcdb"
+        out: "internal/repository/sqlcdb"
+        sql_package: "pgx/v5"
+        emit_pointers_for_null_types: true   # text NULL -> *string, bool NULL -> *bool...
+        emit_empty_slices: true              # :many devolve [] em vez de nil

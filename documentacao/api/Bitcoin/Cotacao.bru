@@ -1,0 +1,28 @@
+meta {
+  name: Cotação (fallback)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/quotes/bitcoin
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.usd: isNumber
+  res.body.brl: isNumber
+  res.body.source: isString
+  res.body.fetched_at: isString
+  res.body.stale: isBoolean
+}
+
+docs {
+  USD e BRL pela cadeia de provedores na ordem de `BTC_QUOTE_PROVIDERS` (padrão `coingecko,binance,awesomeapi`).
+
+  - Cache pelo TTL `BTC_QUOTE_TTL_SECONDS` (300s); cada busca nova é gravada em `cotacoes_bitcoin`.
+  - Se todos os provedores falharem, devolve a última salva com `stale: true`; sem nenhuma salva, 503.
+  - `source` diz qual provedor respondeu.
+}

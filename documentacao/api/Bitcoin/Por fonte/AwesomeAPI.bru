@@ -1,0 +1,25 @@
+meta {
+  name: AwesomeAPI
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/quotes/bitcoin/awesomeapi
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.usd: isNumber
+  res.body.brl: isNumber
+  res.body.fetched_at: isString
+  res.body.source: eq awesomeapi
+}
+
+docs {
+  Chama só este fornecedor (`internal/service/externo/awesomeapi`), sem fallback e sem gravar no banco. Cache em memória pelo TTL; se falhar, 503.
+
+  Usa `AWESOMEAPI_API_KEY` (header `x-api-key`); sem chave a cota é por IP e costuma dar 429 na VPS.
+}
